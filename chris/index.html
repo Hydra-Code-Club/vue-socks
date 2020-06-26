@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Tutorial</title>
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet"/>
+    <link href="./style.css" rel="stylesheet"/>
+  </head>
+  <body class="bg-gray-100">
+    <div id="app">
+      <nav>
+        <div class="cart">
+          <p>Cart ({{cart.length}})</p>
+        </div>
+      </nav>
+      <product @add-to-cart="updateCart"></product>
+
+      <div>
+        <h2 class="ml-4 font-bold">Reviews</h2>
+        <p class="table m-4 p-4 bg-white shadow" v-if="!reviews.length">There are no reviews yet.</p>
+        <ul>
+          <li class="flex-table m-4 p-4 bg-white shadow" v-for="review in reviews">
+            <p class="px-4 font-bold">{{ review.name }}</p>
+            <p class="px-4 font-bold text-yellow-700">Rating: {{ review.rating }}</p>
+            <p class="px-4">{{ review.review }}</p>
+          </li>
+        </ul>
+      </div>
+
+      <product-review @review-submitted="addReview"></product-review>
+    </div>
+
+    <div id="product-template" class="hidden">
+      <div class="product flex m-4 p-4 bg-white shadow">
+
+        <div class="product-image flex-none max-w-1/4">
+          <img :src="image" />
+        </div>
+
+        <div class="product-info px-4 py-px">
+          <h2 class="font-medium text-2xl">
+            <a :href="href"><span v-html="title"></span></a>
+            <span v-show="onSale" class="font-bold text-sm text-orange-700">On Sale!</span>
+          </h2>
+
+          <p v-if="inventory > 10" class="text-green-600">In Stock</p>
+          <p v-else-if="inventory > 0" class="text-yellow-600">Only a Few Left</p>
+          <p v-else class="text-red-600">Out of Stock</p>
+
+          <p>{{ description }}</p>
+
+          <ul class="list-disc list-inside">
+            <li v-for="detail in details">{{detail}}</li>
+          </ul>
+
+          <p class="my-4">
+            <button v-for="(v, index) in variants" @mouseover="updateProduct(index)" :key="v.id" :class="v.btnClass">{{v.color}}</button>
+          </p>
+
+          <button v-on:click="addToCart" v-bind:disabled="!inStock" class="text-white bg-pink-700 shadow">Add to Cart</button>
+        </div>
+
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/vue"></script>
+    <script src="./main.js"></script>
+  </body>
+</html>
